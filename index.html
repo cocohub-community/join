@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Join The Community</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(to bottom, #b90000, #000000);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        a {
+            color: #00FFFF; /* Light Cyan for links */
+        }
+        main {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+        }
+        h1 {
+            margin-bottom: 24px;
+        }
+        label, input, textarea, select {
+            display: block;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        input, textarea, select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ffffff;
+            background: #333;
+            color: #ffffff;
+        }
+        .name-fields {
+            display: flex;
+            gap: 10px;
+        }
+        .name-fields label, .name-fields input {
+            width: calc(50% - 5px);
+            display: inline-block;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #00b900;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .avatar {
+            margin-bottom: 20px;
+        }
+        .avatar img {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div align="center">
+            <a href="https://cocohub.io/"><img src="./assets/coco_logo.png" alt="logo of telegram web apps"></a>
+        </div>
+        <h1>Sign-Up Form</h1>
+        <div class="avatar" id="avatar-container">
+            <img id="avatar" src="" alt="Your avatar" style="display: none; width: 100px; height: 100px;">
+            <input type="file" id="avatar-upload" style="display: none;">
+            <button type="button" id="upload-button" onclick="document.getElementById('avatar-upload').click();">Upload Your Picture</button>
+        </div>
+        <form id="signup-form">
+            <div class="name-fields">
+                <div>
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first-name" name="first-name" required>
+                </div>
+                <div>
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" name="last-name" required>
+                </div>
+            </div>
+
+            <label for="instagram">Instagram Handle:</label>
+            <input type="text" id="instagram" name="instagram" required>
+
+            <label for="linkedin">LinkedIn Handle:</label>
+            <input type="text" id="linkedin" name="linkedin" required>
+
+            <label for="description">Short Self-Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="destination">Next Co-Living Destination:</label>
+            <input type="text" id="destination" name="destination" required>
+
+            <label for="plan-date">When are you planning to go to this co-living?</label>
+            <select id="plan-date" name="plan-date" required>
+                <option value="asap">ASAP</option>
+                <option value="next-month">Next Month</option>
+                <option value="next-3-months">Next 3 Months</option>
+                <option value="this-year">This Year</option>
+            </select>
+
+            <label for="recovery-email">Recovery Email (optional):</label>
+            <input type="email" id="recovery-email" name="recovery-email">
+
+            <label>
+                <input type="checkbox" id="agreement" name="agreement" required>
+                I agree to the CoCoHub Community Standards, Terms and Conditions and Privacy Policy
+            </label>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <h1>Links</h1>
+        <ul>
+            <li>
+                <a href="https://example.com/manifesto">Our Manifesto</a>
+            </li>
+            <li>
+                <a href="https://example.com">Our Website</a>
+            </li>
+        </ul>
+    </main>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Init TWA
+        Telegram.WebApp.ready();
+
+        // Show main button
+        Telegram.WebApp.MainButton.setParams({
+            text: 'Main Button'
+        });
+        Telegram.WebApp.MainButton.onClick(function () {
+            Telegram.WebApp.showAlert('Main Button was clicked')
+        }); 
+        Telegram.WebApp.MainButton.show();
+
+        // Expand webview
+        Telegram.WebApp.expand();
+
+        // Handle form submission
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var formObject = {};
+            formData.forEach((value, key) => { formObject[key] = value });
+            Telegram.WebApp.sendData(JSON.stringify(formObject));
+            Telegram.WebApp.showAlert('Thank you for signing up!');
+        });
+
+        // Load Telegram avatar if available, otherwise show upload button
+        Telegram.WebApp.getUserInfo(function(user) {
+            if (user.photo_url) {
+                document.getElementById('avatar').src = user.photo_url;
+                document.getElementById('avatar').style.display = 'block';
+                document.getElementById('upload-button').style.display = 'none';
+            } else {
+                document.getElementById('avatar-upload').style.display = 'block';
+            }
+        });
+
+        // Handle avatar upload
+        document.getElementById('avatar-upload').addEventListener('change', function(event) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar').src = e.target.result;
+                document.getElementById('avatar').style.display = 'block';
+                document.getElementById('upload-button').style.display = 'none';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+    </script>
+
+    <!-- Eruda is console for mobile browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+</body>
+</html>
